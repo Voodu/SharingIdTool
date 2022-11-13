@@ -1,0 +1,43 @@
+{
+    "solution": {
+        "provisionSucceeded": true,
+        "teamsAppTenantId": "8241f6c6-b26e-4928-b769-1959e47e0e41",
+        "subscriptionId": "77b7a0a6-4bb4-4b57-9e80-b4563840539a",
+        "subscriptionName": "Visual Studio Enterprise",
+        "tenantId": "84c31ca0-ac3b-4eae-ad11-519d80233e6f",
+        "needCreateResourceGroup": true,
+        "resourceGroupName": "SharingIdTool-dev-rg",
+        "location": "westeurope",
+        "resourceNameSuffix": "9fc648"
+    },
+    "fx-resource-appstudio": {
+        "tenantId": "8241f6c6-b26e-4928-b769-1959e47e0e41",
+        "teamsAppId": "416b0e43-c0b5-4813-b90e-5878b6860d95"
+    },
+    "fx-resource-frontend-hosting": {
+        "indexPath": "/",
+        "skuName": "F1",
+        "siteName": "sharingidtcb9b0ctab",
+        "domain": "sharingidtcb9b0ctab.azurewebsites.net",
+        "appServicePlanName": "sharingidtcb9b0ctab",
+        "resourceId": "/subscriptions/77b7a0a6-4bb4-4b57-9e80-b4563840539a/resourceGroups/SharingIdTool-dev-rg/providers/Microsoft.Web/sites/sharingidtcb9b0ctab",
+        "siteEndpoint": "https://sharingidtcb9b0ctab.azurewebsites.net",
+        "endpoint": "https://sharingidtcb9b0ctab.azurewebsites.net"
+    },
+    "fx-resource-aad-app-for-teams": {
+        "clientId": "5d966e60-9beb-4759-bf65-e6707e5ff2ac",
+        "clientSecret": "{{fx-resource-aad-app-for-teams.clientSecret}}",
+        "objectId": "a5c369aa-a263-4664-83fd-17e7dcea292f",
+        "oauth2PermissionScopeId": "76e7944b-2a4f-442a-a534-0876eb44231a",
+        "tenantId": "8241f6c6-b26e-4928-b769-1959e47e0e41",
+        "oauthHost": "https://login.microsoftonline.com",
+        "oauthAuthority": "https://login.microsoftonline.com/8241f6c6-b26e-4928-b769-1959e47e0e41",
+        "applicationIdUris": "api://sharingidtcb9b0ctab.azurewebsites.net/5d966e60-9beb-4759-bf65-e6707e5ff2ac",
+        "frontendEndpoint": "https://sharingidtcb9b0ctab.azurewebsites.net"
+    },
+    "fx-resource-identity": {
+        "identityName": "sharingidtcb9b0c",
+        "identityResourceId": "/subscriptions/77b7a0a6-4bb4-4b57-9e80-b4563840539a/resourceGroups/SharingIdTool-dev-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/sharingidtcb9b0c",
+        "identityClientId": "60462caf-f90f-41a1-859a-86a75ef4e255"
+    }
+}
