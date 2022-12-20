@@ -1,7 +1,6 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 * {
     box-sizing: border-box;
-    /* outline: 1px dashed #f00; */
 }
 
 html, body {
@@ -15,19 +14,6 @@ body {
     font-size: var(--type-ramp-base-font-size);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #eeeeee;
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: red;
 }
 
 #blazor-error-ui {
@@ -49,27 +35,13 @@ body {
         top: 0.5rem;
     }
 
-pre,
-div.error {
-    background-color: #e5e5e5;
-    padding: 1rem;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    margin: 1rem 0;
-    max-height: 250px;
-}
-
-    pre.fixed,
-    div.error.fixed {
-        height: 200px;
-    }
-
 code {
-    background-color: #e5e5e5;
+    background-color: var(--neutral-fill-input-rest);
     display: inline-block;
     padding: 0px 6px;
     border-radius: 3px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    color: var(--neutral-foreground-rest);
 }
 
 /* Variables */

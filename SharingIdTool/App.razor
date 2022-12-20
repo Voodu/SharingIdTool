@@ -1,7 +1,12 @@
-<FluentDesignSystemProvider AccentBaseColor="#6264A7">
+@using SharingIdTool.Interop.Custom
+@using SharingIdTool.Utils
+@inject MicrosoftTeams MicrosoftTeams
+@inject TeamsThemeChange<App> TeamsThemeChange
+
+<FluentDesignSystemProvider AccentBaseColor="#6264A7" BaseLayerLuminance="_luminance" style="height: 100%">
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
@@ -10,3 +15,42 @@
         </NotFound>
     </Router>
 </FluentDesignSystemProvider>
+
+@code
+{
+    private float _luminance = 1.0f;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await MicrosoftTeams.InitializeAsync();
+            var context = await MicrosoftTeams.GetTeamsContextAsync();
+            await UpdateLuminance(context.Theme);
+            TeamsThemeChange.InitializeInterop(this);
+            await TeamsThemeChange.BindOnChangeAsync(nameof(UpdateLuminance));
+        }
+    }
+
+    [JSInvokable]
+    public async Task UpdateLuminance(string theme = TeamsTheme.Default)
+    {
+        await Task.Run(() =>
+        {
+    // This updates FluentUI components theme
+            _luminance = theme switch
+            {
+                TeamsTheme.Default => 1.0f,
+                TeamsTheme.Dark => 0.0f,
+    // For now, high contrast theme is treated the same as dark
+                TeamsTheme.Contrast => 0.0f,
+                _ => 1.0f
+            };
+        });
+    // This updates custom variables defined in site.css
+        await TeamsThemeChange.UpdateBodyThemeAsync(theme);
+        StateHasChanged();
+    }
+}
