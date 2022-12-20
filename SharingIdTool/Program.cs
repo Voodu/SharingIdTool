@@ -2,6 +2,8 @@ using Core.MergerService;
 using Core.TrackedDomainService;
 using Core.ValidationService;
 using Microsoft.Fast.Components.FluentUI;
+using SharingIdTool;
+using SharingIdTool.Interop.Custom;
 using SharingIdTool.Interop.TeamsSDK;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,8 @@ builder.Services.AddFluentUIComponents();
 
 builder.Services.AddTeamsFx(builder.Configuration.GetSection("TeamsFx"));
 builder.Services.AddScoped<MicrosoftTeams>();
+builder.Services.AddScoped<TeamsThemeChange<App>>();
+builder.Services.AddTransient<IClipboardCopy, ClipboardCopy>();
 builder.Services.AddTransient<IMergerService, MergerService>();
 builder.Services.AddTransient<ITrackedDomainService, TrackedDomainService>();
 builder.Services.AddTransient<IValidationService, ValidationService>();
@@ -48,4 +52,3 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
-
