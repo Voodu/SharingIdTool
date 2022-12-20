@@ -1,0 +1,176 @@
+﻿@using Microsoft.Fast.Components.FluentUI
+@using Moq
+@using Core.ValidationService
+@using Core.MergerService
+@inherits TestContext
+
+@code {
+    public IdMergerTests()
+    {
+        ComponentFactories.AddStub<FluentTextField>();
+        ComponentFactories.AddStub<FluentButton>();
+    }
+
+    [Fact]
+    public async Task ShouldEmitEmptyUrlForIncorrectData()
+    {
+        // Arrange
+        var expectedUri = string.Empty;
+
+        // Services setup
+        var validationService = new Mock<IValidationService>();
+        var mergerService = new Mock<IMergerService>();
+        validationService.Setup(x => x.IsValidationSuccessful).Returns(false);
+        Services.AddSingleton(validationService.Object);
+        Services.AddSingleton(mergerService.Object);
+
+        var isUrlGenerationCorrect = false;
+        void UrlGeneratedHandler(string uri)
+        {
+            Assert.Equal(expectedUri, uri);
+            isUrlGenerationCorrect = true;
+        }
+
+        var cut = Render(@<IdMerger OnUrlGenerated="UrlGeneratedHandler" />);
+        var form = cut.Find("form");
+
+        // Act
+        await form.SubmitAsync();
+
+        // Assert
+        cut.WaitForAssertion(() => Assert.True(isUrlGenerationCorrect));
+    }
+
+    [Fact]
+    public async Task ShouldEmitUrlForCorrectData()
+    {
+        // Arrange
+        var expectedUri = "https://www.example.com/";
+        
+        // Services setup
+        var validationService = new Mock<IValidationService>();
+        var mergerService = new Mock<IMergerService>();
+        validationService.Setup(x => x.IsValidationSuccessful).Returns(true);
+        mergerService.Setup(x => x.Merge(It.IsAny<string>(), It.IsAny<string>())).Returns(new Uri(expectedUri));
+        Services.AddSingleton(validationService.Object);
+        Services.AddSingleton(mergerService.Object);
+        
+        var isUrlGenerationCorrect = false;
+        void UrlGeneratedHandler(string uri)
+        {
+            Assert.Equal(expectedUri, uri);
+            isUrlGenerationCorrect = true;
+        }
+
+        var cut = Render(@<IdMerger OnUrlGenerated="UrlGeneratedHandler" />);
+        var form = cut.Find("form");
+
+        // Act
+        await form.SubmitAsync();
+
+        // Assert
+        cut.WaitForAssertion(() => Assert.True(isUrlGenerationCorrect));
+    }
+
+    [Fact]
+    public async Task ShouldEmitStatusMessagesFromValidationService()
+    {
+        // Arrange
+        var expectedStatusMessages = new List<(string message, string status)>
+        {
+            ("Message 1", "Status 1"),
+            ("Message 2", "Status 2")
+        };
+
+        // Services setup
+        var validationService = new Mock<IValidationService>();
+        var mergerService = new Mock<IMergerService>();
+        // Return false to simplify the test
+        validationService.Setup(x => x.IsValidationSuccessful).Returns(false);
+        validationService.Setup(x => x.StatusMessages).Returns(expectedStatusMessages);
+        Services.AddSingleton(validationService.Object);
+        Services.AddSingleton(mergerService.Object);
+
+        var isStatusChangeCorrect = false;
+        void StatusChangedHandler(List<(string message, string status)> statusMessages)
+        {
+            Assert.Equal(expectedStatusMessages, statusMessages);
+            isStatusChangeCorrect = true;
+        }
+
+        var cut = Render(@<IdMerger OnStatusChanged="StatusChangedHandler" />);
+        var form = cut.Find("form");
+
+        // Act
+        await form.SubmitAsync();
+
+        // Assert
+        cut.WaitForAssertion(() => Assert.True(isStatusChangeCorrect));
+    }
+
+    [Fact]
+    public void ShouldAllInputsHaveCorrectAttributes()
+    {
+        // Arrange
+        var expectedUrlInputAttributes = new Dictionary<string, string>
+        {
+            { "class", "link-input" },
+            { "Placeholder", "Provide the URL" },
+            { "Required", "True" }
+        };
+        var expectedIdInputAttributes = new Dictionary<string, string>
+        {
+            { "class", "id-input" },
+            { "Placeholder", "Provide your ID" },
+            { "Required", "True" }
+        };
+        var expectedButtonAttributes = new Dictionary<string, string>
+        {
+            { "Appearance", $"{Appearance.Accent}" },
+            { "Type", "submit" }
+        };
+
+        // Services setup
+        var validationService = new Mock<IValidationService>();
+        var mergerService = new Mock<IMergerService>();
+        Services.AddSingleton(validationService.Object);
+        Services.AddSingleton(mergerService.Object);
+
+        var cut = Render(@<IdMerger/>);
+        
+        // Act
+        // None, does not matter for this test
+        
+        // Assert
+        var textFieldStubs = cut.FindComponents<Stub<FluentTextField>>();
+        var urlInputStub = textFieldStubs
+            .FirstOrDefault(c =>
+                c.Instance.Parameters["class"].ToString()?.Equals(expectedUrlInputAttributes["class"])
+                ?? false);
+        var idInputStub = textFieldStubs
+            .FirstOrDefault(c =>
+                c.Instance.Parameters["class"].ToString()?.Equals(expectedIdInputAttributes["class"])
+                ?? false);
+        var buttonStub = cut.FindComponent<Stub<FluentButton>>();
+        
+        Assert.NotNull(urlInputStub);
+        Assert.NotNull(idInputStub);
+        Assert.NotNull(buttonStub);
+
+        foreach (var (name, _) in expectedUrlInputAttributes)
+        {
+            var parameters = urlInputStub.Instance.Parameters;
+            Assert.Equal(expectedUrlInputAttributes[name], parameters[name].ToString());
+        }
+        foreach (var (name, _) in expectedIdInputAttributes)
+        {
+            var parameters = idInputStub.Instance.Parameters;
+            Assert.Equal(expectedIdInputAttributes[name], parameters[name].ToString());
+        }
+        foreach (var (name, _) in expectedButtonAttributes)
+        {
+            var parameters = buttonStub.Instance.Parameters;
+            Assert.Equal(expectedButtonAttributes[name], parameters[name].ToString());
+        }
+    }
+}

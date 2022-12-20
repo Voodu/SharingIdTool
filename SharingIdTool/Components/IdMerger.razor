@@ -1,0 +1,51 @@
+﻿@using Core.ValidationService
+@using Core.MergerService
+@inject IValidationService ValidationService
+@inject IMergerService MergerService
+
+<div>
+    <form @onsubmit="GenerateSharingUrl">
+        <FluentTextField
+            class="link-input"
+            @bind-Value="@_rawUrl"
+            Placeholder="Provide the URL"
+            Required="true"/>
+        <FluentTextField
+            class="id-input"
+            @bind-Value="@_rawId"
+            Placeholder="Provide your ID"
+            Required="true"/>
+        <FluentButton
+            Appearance="Appearance.Accent"
+            Type="submit">
+            Add ID
+        </FluentButton>
+    </form>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<string> OnUrlGenerated { get; set; }
+
+    [Parameter]
+    public EventCallback<List<(string message, string status)>> OnStatusChanged { get; set; }
+
+    private string _rawUrl = string.Empty;
+    private string _rawId = string.Empty;
+
+    private async Task GenerateSharingUrl()
+    {
+        ValidationService.RunValidation(_rawUrl, _rawId);
+        await OnStatusChanged.InvokeAsync(ValidationService.StatusMessages);
+
+        if (!ValidationService.IsValidationSuccessful)
+        {
+            await OnUrlGenerated.InvokeAsync(string.Empty);
+            return;
+        }
+        var mergedUrl = MergerService.Merge(_rawUrl, _rawId).ToString();
+        await OnUrlGenerated.InvokeAsync(mergedUrl);
+    }
+
+}

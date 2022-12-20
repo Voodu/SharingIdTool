@@ -1,10 +1,46 @@
 ﻿@page "/"
 @page "/tab"
-@using SharingIdTool.Components;
 
-<div>
-    <Welcome />
+<div class="narrow page-padding">
+
+    @if (_isLoading)
+    {
+        <div class="spinner-container">
+            <FluentProgressRing/>
+        </div>
+    }
+    else
+    {
+        <IdMerger OnStatusChanged="@UpdateStatusInfo" OnUrlGenerated="UpdateUrl"/>
+        <MergingOutput Url="@_url"/>
+        <MergingStatus StatusMessages="@_statusMessages"/>
+    }
 </div>
 
+@code
+{
+    bool _isLoading = true;
+    string _url = string.Empty;
+    List<(string message, string status)> _statusMessages = new();
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
 
+        if (firstRender)
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void UpdateStatusInfo(List<(string message, string status)> statusList)
+    {
+        _statusMessages = statusList;
+    }
+
+    private void UpdateUrl(string newUrl)
+    {
+        _url = newUrl;
+    }
+}

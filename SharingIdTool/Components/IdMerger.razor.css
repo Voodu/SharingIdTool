@@ -1,0 +1,9 @@
+﻿form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+::deep .link-input { width: 100%; }
+
+::deep .id-input { flex-grow: 1; }
