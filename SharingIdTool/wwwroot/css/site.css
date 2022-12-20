@@ -71,3 +71,53 @@ code {
     border-radius: 3px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
+
+/* Variables */
+
+:root {
+    --container-padding: calc(var(--design-unit) * 2px + 1px);
+    --radius-sm: 4px;
+    /* Alert */
+    --alert-error-fill: #FCF4F6;
+    --alert-error-stroke: #F3D6D8;
+    --alert-error-font: #C4314B;
+    --alert-warning-fill: #FBF6D9;
+    --alert-warning-stroke: #F2E384;
+    --alert-warning-font: #835C00;
+    --alert-success-fill: #E7F2DA;
+    --alert-success-stroke: #BDDA9B;
+    --alert-success-font: #237B4B;
+    --alert-info-fill: #E0E0E0;
+    --alert-info-stroke: #D1D1D1;
+    --alert-info-font: #242424;
+}
+
+/* 
+    Workaround for Teams theme changing independently from prefers-color-scheme
+    https://stackoverflow.com/questions/56300132/how-to-override-css-prefers-color-scheme-setting
+*/
+
+[data-theme="dark"] {
+    --alert-error-fill: #3E1F25;
+    --alert-error-stroke: #1E040A;
+    --alert-error-font: #F9526B;
+    --alert-warning-fill: #463100;
+    --alert-warning-stroke: #261A00;
+    --alert-warning-font: #F2E384;
+    --alert-success-fill: #0D2E0D;
+    --alert-success-stroke: #032003;
+    --alert-success-font: #92C353;
+    --alert-info-fill: #333333;
+    --alert-info-stroke: #616161;
+    --alert-info-font: #FFFFFF;
+}
+
+/* SVG coloring classes */
+
+.svg-color-info path { fill: var(--alert-info-font); }
+
+.svg-color-warning path { fill: var(--alert-warning-font); }
+
+.svg-color-error path { fill: var(--alert-error-font); }
+
+.svg-color-success path { fill: var(--alert-success-font); }

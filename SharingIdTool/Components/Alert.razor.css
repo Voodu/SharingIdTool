@@ -1,0 +1,31 @@
+﻿.container {
+    display: flex;
+    align-items: center;
+    padding: 6px 16px;
+    height: 3.5em;
+
+    border-radius: var(--radius-sm);
+}
+    .container.info {
+        background-color: var(--alert-info-fill);
+        border: 1px solid var(--alert-info-stroke);
+        color: var(--alert-info-font);
+    }
+    .container.warning {
+        background-color: var(--alert-warning-fill);
+        border: 1px solid var(--alert-warning-stroke);
+        color: var(--alert-warning-font);
+    }
+    .container.error {
+        background-color: var(--alert-error-fill);
+        border: 1px solid var(--alert-error-stroke);
+        color: var(--alert-error-font);
+    }
+    .container.success {
+        background-color: var(--alert-success-fill);
+        border: 1px solid var(--alert-success-stroke);
+        color: var(--alert-success-font);
+    }
+    .container .message {
+        margin-left: 10px;
+    }

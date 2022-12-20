@@ -1,0 +1,50 @@
+﻿@inherits TestContext
+
+@code {
+    public MergingStatusTests()
+    {
+        ComponentFactories.AddStub<Alert>();
+    }
+
+    [Fact]
+    public void ShouldRenderNothingForEmptyStatusCollection()
+    {
+        // Arrange
+        var cut = Render(@<MergingStatus/>);
+
+        // Act
+        // None, component is not interactive
+
+        // Assert
+        Assert.Equal(string.Empty, cut.Markup);
+    }
+
+    [Fact]
+    public void ShouldRenderDifferentAlertsForDifferentStatuses()
+    {
+        // Arrange
+        var statusMessages = new List<(string message, string status)>
+        {
+            ("Message 1", "success"),
+            ("Message 2", "error"),
+            ("Message 3", "warning"),
+            ("Message 4", "info"),
+            ("Message 5", "default")
+        };
+        var cut = Render(@<MergingStatus StatusMessages="@statusMessages"/>);
+
+        // Act
+        // None, component is not interactive
+
+        // Assert
+        var mainContainer = cut.Find(".issue-list");
+        var alertStubs = cut.FindComponents<Stub<Alert>>();
+        var alertMessages = alertStubs.Select(s => s.Instance.Parameters.Get(a => a.Message));
+        var alertStatuses = alertStubs.Select(s => s.Instance.Parameters.Get(a => a.Status));
+        var alertParams = alertMessages.Zip(alertStatuses, (message, status) => (message, status)).ToList();
+
+        Assert.NotNull(mainContainer);
+        Assert.Equal(statusMessages, alertParams);
+    }
+
+}

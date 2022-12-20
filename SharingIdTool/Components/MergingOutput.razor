@@ -1,0 +1,47 @@
+﻿@using SharingIdTool.Interop.Custom
+@inject IClipboardCopy ClipboardCopy
+
+@if (!string.IsNullOrEmpty(Url))
+{
+    <div class="output-container">
+        <div class="output">
+            <span class="label">URL with your ID:</span>
+            <p class="merged-url">@Url</p>
+        </div>
+        @if (_showCheckmarkButton)
+        {
+            <FluentButton class="checkmark-button">
+                <FluentIcon class="svg-color-success" Name="@FluentIcons.Checkmark" Size="@IconSize.Size16" Filled=false/>
+            </FluentButton>
+        }
+        else
+        {
+            <FluentButton id="copy-button" @onclick="CopyUrlToClipboard" aria-label="Copy text to clipboard">
+                <FluentIcon Name="@FluentIcons.Copy" Size="@IconSize.Size16" Filled=false/>
+            </FluentButton>
+            <FluentTooltip class="copy-tooltip" Anchor="copy-button" Delay=200>Copy text to clipboard</FluentTooltip>
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string Url { get; set; } = string.Empty;
+    
+    bool _showCheckmarkButton = false;
+
+    private async Task CopyUrlToClipboard()
+    {
+        await ClipboardCopy.CopyToClipboardAsync(Url);
+        ToggleConfirmationCheckmark(true);
+        await Task.Delay(1500).ContinueWith(t => ToggleConfirmationCheckmark(false), TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    private void ToggleConfirmationCheckmark(bool isShown)
+    {
+        _showCheckmarkButton = isShown;
+        StateHasChanged();
+    }
+
+}

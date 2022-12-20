@@ -1,0 +1,80 @@
+﻿@using Microsoft.Fast.Components.FluentUI
+@using Moq
+@using SharingIdTool.Interop.Custom
+@inherits TestContext
+
+@code {
+    public MergingOutputTests()
+    {
+        ComponentFactories.AddStub<FluentIcon>();
+        ComponentFactories.AddStub<FluentTooltip>();
+    }
+
+    [Fact]
+    public void ShouldRenderNothingIfUrlIsEmpty()
+    {
+        // Arrange
+        var validationService = new Mock<IClipboardCopy>();
+        Services.AddSingleton(validationService.Object);
+        var cut = RenderComponent<MergingOutput>();
+        
+        // Act
+        // None, component is not interactive
+
+        // Assert
+        Assert.Equal(string.Empty, cut.Markup);
+    }
+
+    [Fact]
+    public void ShouldRenderUrlInParagraph()
+    {
+        // Arrange
+        var url = "https://www.example.com";
+        var validationService = new Mock<IClipboardCopy>();
+        Services.AddSingleton(validationService.Object);
+        var cut = Render(@<MergingOutput Url="@url" />);
+
+        // Act
+        // None, component is not interactive
+
+        // Assert
+        var paragraph = cut.Find("p.merged-url");
+        Assert.NotNull(paragraph);
+        Assert.Equal(url, paragraph.TextContent);
+    }
+
+    [Fact]
+    public void ShouldCallCopyUrlToClipboard()
+    {
+        // Arrange
+        var url = "https://www.example.com";
+        var validationService = new Mock<IClipboardCopy>();
+        Services.AddSingleton(validationService.Object);
+        var cut = Render(@<MergingOutput Url="@url" />);
+
+        // Act
+        var copyButton = cut.Find("#copy-button");
+        copyButton.Click();
+
+        // Assert
+        validationService.Verify(x => x.CopyToClipboardAsync(url), Times.Once);
+    }
+
+    [Fact]
+    public void ShouldShowCheckmarkButtonAfterClickingCopyButton()
+    {
+        // Arrange
+        var url = "https://www.example.com";
+        var validationService = new Mock<IClipboardCopy>();
+        Services.AddSingleton(validationService.Object);
+        var cut = Render(@<MergingOutput Url="@url" />);
+
+        // Act
+        var copyButton = cut.Find("#copy-button");
+        copyButton.Click();
+
+        // Assert
+        cut.WaitForAssertion(() => Assert.NotNull(cut.Find(".checkmark-button")));
+        cut.WaitForAssertion(() => Assert.NotNull(cut.Find("#copy-button")), TimeSpan.FromSeconds(2.0));
+    }
+}

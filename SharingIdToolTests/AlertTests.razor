@@ -1,0 +1,62 @@
+﻿@using Microsoft.Fast.Components.FluentUI
+@inherits TestContext
+
+@code {
+    public AlertTests()
+    {
+        ComponentFactories.AddStub<FluentIcon>();
+    }
+
+    [Fact]
+    public void ShouldDisplayDefaultInfoAlert()
+    {
+        // Arrange
+        var cut = Render(@<Alert Message="Default Test" />);
+        const string expectedText = "Default Test";
+
+        // Act
+        // None, component is not interactive
+
+        // Assert
+        // Search step by step, so it checks correctness of the containers
+        var mainContainer = cut.Find(".container.info");
+        var messageSpan = mainContainer.QuerySelector(".message");
+        var message = messageSpan?.TextContent;
+        var iconStub = cut.FindComponent<Stub<FluentIcon>>();
+        var iconName = iconStub.Instance.Parameters.Get(x => x.Name);
+        var iconClasses = iconStub.Instance.Parameters["class"].ToString()?.Split() ?? Array.Empty<string>();
+
+        Assert.Equal(FluentIcons.Info, iconName);
+        Assert.Contains(iconClasses, cssClass => cssClass.Equals("svg-color-info"));
+        Assert.Equal(expectedText, message);
+    }
+
+    [Theory]
+    [InlineData("info", FluentIcons.Info)]
+    [InlineData("success", FluentIcons.CheckmarkCircle)]
+    [InlineData("warning", FluentIcons.Warning)]
+    [InlineData("error", FluentIcons.ErrorCircle)]
+    public void ShouldAllExplicitAlertTypes(string status, string expectedIcon)
+    {
+        // Arrange
+        var cut = Render(@<Alert Message="Test" Status="@status" />);
+        const string expectedText = "Test";
+
+        // Act
+        // None, component is not interactive
+
+        // Assert
+        // Search step by step, so it checks correctness of the containers
+        var mainContainer = cut.Find($".container.{status}");
+        var messageSpan = mainContainer.QuerySelector(".message");
+        var message = messageSpan?.TextContent;
+        var iconStub = cut.FindComponent<Stub<FluentIcon>>();
+        var iconName = iconStub.Instance.Parameters.Get(x => x.Name);
+        var iconClasses = iconStub.Instance.Parameters["class"].ToString()?.Split() ?? Array.Empty<string>();
+
+        Assert.Equal(expectedIcon, iconName);
+        Assert.Contains(iconClasses, cssClass => cssClass.Equals($"svg-color-{status}"));
+        Assert.Equal(expectedText, message);
+    }
+
+}

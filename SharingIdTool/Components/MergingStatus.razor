@@ -1,0 +1,16 @@
+﻿@if (StatusMessages.Count > 0)
+{
+    <div class="issue-list">
+        @foreach (var issue in StatusMessages)
+        {
+            <Alert Message="@issue.message" Status="@issue.status" />
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public List<(string message, string status)> StatusMessages { get; set; } = new();
+
+}

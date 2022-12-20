@@ -1,0 +1,29 @@
+﻿@using Core
+@using Core.ValidationService
+
+<div class="container @Status">
+    <FluentIcon class=@("icon svg-color-" + @Status) Name="@IconName" Size="@IconSize.Size20" Filled="true" />
+    <span class="message">@Message</span>
+</div>
+
+@code {
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public string Status { get; set; } = FluentIcons.Info;
+
+    private string IconName
+    {
+        get
+        {
+            return Status switch
+            {
+                Constants.ValidationStatus.Warning => FluentIcons.Warning,
+                Constants.ValidationStatus.Error => FluentIcons.ErrorCircle,
+                Constants.ValidationStatus.Success => FluentIcons.CheckmarkCircle,
+                _ => FluentIcons.Info
+            };
+        }
+    }
+}

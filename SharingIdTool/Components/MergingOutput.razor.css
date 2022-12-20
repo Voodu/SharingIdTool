@@ -1,0 +1,33 @@
+﻿.output-container {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.output {
+    align-items: center;
+    align-self: stretch;
+    background: padding-box linear-gradient(var(--neutral-fill-input-rest), var(--neutral-fill-input-rest)), border-box var(--neutral-stroke-input-rest);
+    border-radius: calc(var(--control-corner-radius) * 1px);
+    color: var(--neutral-foreground-rest);
+    display: flex;
+    flex-grow: 1;
+    gap: 0.5rem;
+    overflow-x: hidden;
+    padding: 0 var(--container-padding);
+}
+
+.output .label { flex-shrink: 0; }
+
+.output .merged-url {
+    flex-grow: 1;
+    margin: 0.4em;
+    overflow-x: auto;
+}
+
+.output .merged-url::-webkit-scrollbar { display: none; }
+
+::deep .copy-tooltip { position: absolute; }
+
+::deep .checkmark-button::part(control) { border: 1px solid var(--alert-success-stroke); }
