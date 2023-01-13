@@ -5,10 +5,10 @@
     "id": "{{state.fx-resource-appstudio.teamsAppId}}",
     "packageName": "com.microsoft.teams.extension",
     "developer": {
-        "name": "Teams App, Inc.",
-        "websiteUrl": "https://www.example.com",
-        "privacyUrl": "https://www.example.com/termofuse",
-        "termsOfUseUrl": "https://www.example.com/privacy"
+        "name": "Piotr Ładoński",
+        "websiteUrl": "https://github.com/Voodu",
+        "privacyUrl": "https://github.com/Voodu/SharingIdTool/docs/privacy.md",
+        "termsOfUseUrl": "https://github.com/Voodu/SharingIdTool/docs/terms.md"
     },
     "icons": {
         "color": "{{config.manifest.icons.color}}",
@@ -22,33 +22,20 @@
         "short": "{{config.manifest.description.short}}",
         "full": "{{config.manifest.description.full}}"
     },
-    "accentColor": "#FFFFFF",
+    "defaultInstallScope": "personal",
+    "accentColor": "#6264A7",
     "bots": [],
     "composeExtensions": [],
-    "configurableTabs": [
-        {
-            "configurationUrl": "{{{state.fx-resource-frontend-hosting.endpoint}}}{{{state.fx-resource-frontend-hosting.indexPath}}}/config",
-            "canUpdateConfiguration": true,
-            "scopes": [
-                "team",
-                "groupchat"
-            ]
-        }
-    ],
     "staticTabs": [
         {
             "entityId": "index0",
-            "name": "Personal Tab",
+            "name": "Generator",
             "contentUrl": "{{{state.fx-resource-frontend-hosting.endpoint}}}{{{state.fx-resource-frontend-hosting.indexPath}}}/tab",
             "websiteUrl": "{{{state.fx-resource-frontend-hosting.endpoint}}}{{{state.fx-resource-frontend-hosting.indexPath}}}/tab",
             "scopes": [
                 "personal"
             ]
         }
-    ],
-    "permissions": [
-        "identity",
-        "messageTeamMembers"
     ],
     "validDomains": [
         "{{state.fx-resource-frontend-hosting.domain}}"
